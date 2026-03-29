@@ -62,6 +62,18 @@ export default {
         success: "hsl(var(--success))",
         warning: "hsl(var(--warning))",
         info: "hsl(var(--info))",
+        earth: {
+          50: "hsl(var(--earth-50))",
+          100: "hsl(var(--earth-100))",
+          200: "hsl(var(--earth-200))",
+          300: "hsl(var(--earth-300))",
+          400: "hsl(var(--earth-400))",
+          500: "hsl(var(--earth-500))",
+          600: "hsl(var(--earth-600))",
+          700: "hsl(var(--earth-700))",
+          800: "hsl(var(--earth-800))",
+          900: "hsl(var(--earth-900))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
