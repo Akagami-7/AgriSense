@@ -33,7 +33,7 @@ export function FloatingIsland() {
 
                 {/* Brand */}
                 <div className="flex items-center gap-3 px-4 py-2 border-r border-earth-200/50 dark:border-earth-800/30">
-                    <a href="/" className="flex items-center gap-2 no-underline group">
+                    <a href="/dashboard" className="flex items-center gap-2 no-underline group">
                         <div className="w-9 h-9 rounded-xl gradient-earth flex items-center justify-center shadow-lg shadow-earth-900/10">
                             <Sprout className="w-5 h-5 text-white" />
                         </div>
@@ -44,7 +44,7 @@ export function FloatingIsland() {
                 </div>
 
                 {/* Navigation */}
-                <nav className="flex items-center gap-1 overflow-x-auto no-scrollbar mx-4">
+                <nav className="flex items-center gap-1 overflow-x-auto no-scrollbar mx-4 h-12">
                     {navItems.map((item) => (
                         <NavLink
                             key={item.url}
