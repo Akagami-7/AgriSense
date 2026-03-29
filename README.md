@@ -24,13 +24,5 @@ AgriSense follows a **Nature-Inspired Design System**, blending professional Saa
 - **Glassmorphism & Soft Gradients**: Creating a modern, state-of-the-art interface.
 - **Dynamic Session Security**: All data (history and API keys) is purged upon browser closure, ensuring your field data stays private.
 
-## Project Documentation
-
-For detailed information on the project lifecycle and implementation, please refer to the following internal artifacts:
-- [Walkthrough & Feature Demo](walkthrough.md)
-- [Project Task List](task.md)
-- [Implementation Plan](implementation_plan.md)
-- [Agile Management & Backlog](agile_management.md)
-
 ---
 *Developed as a high-fidelity capstone project for the Smart Farming initiative.*
