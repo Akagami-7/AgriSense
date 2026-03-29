@@ -5,7 +5,7 @@ AgriSense is a professional-grade agricultural platform designed to empower mode
 > [!NOTE] 
 > For first-time setup and installation, please visit - [Instructions Guide](instructions.md)
 
-## 🌟 Key Features
+## Key Features
 
 - **AI Crop Detection**: Real-time identification of crop types and health status from imagery.
 - **Smart Soil Analysis**: Detailed diagnostic reports on soil composition and health metrics.
@@ -14,7 +14,7 @@ AgriSense is a professional-grade agricultural platform designed to empower mode
 - **Expert Farming Tips**: Curated agricultural advice based on seasonal and regional data.
 - **Comprehensive Reports**: Exportable data summaries for long-term farm management.
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Frontend**: React (v18), TypeScript
 - **Build Tool**: Vite
@@ -26,7 +26,7 @@ AgriSense is a professional-grade agricultural platform designed to empower mode
 - **Validation**: Zod & React Hook Form
 - **Testing**: Vitest & Playwright
 
-## 📂 Project Structure
+## Project Structure
 
 ```text
 AgriSense/
@@ -61,7 +61,7 @@ AgriSense/
 └── vite.config.ts          # Vite build configuration
 ```
 
-## 📄 File Explanations
+## File Explanations
 
 ### Root Directory
 - **`package.json`**: Defines the project's dependencies, versioning, and scripts (`dev`, `build`, `lint`).
