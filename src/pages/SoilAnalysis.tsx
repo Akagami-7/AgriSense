@@ -121,7 +121,7 @@ const SoilAnalysis = () => {
       Estimate: ph (0-14), moisture (%), nitrogen (ppm), phosphorus (ppm), potassium (ppm).
       Respond ONLY with a JSON object: { "type": "Loamy", "ph": 6.5, "moisture": 45, "n": 24, "p": 50, "k": 150, "description": "max 2 sentences" }.`;
 
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

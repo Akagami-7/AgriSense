@@ -66,8 +66,8 @@ const Profile = () => {
         description: "Your keys are now securely linked to your account."
       });
     } catch (err) {
-      console.error(err);
-      toast.error("Failed to save configurations.");
+      console.error("Firestore Save Error:", err);
+      toast.error("Failed to save integrations.");
     }
   };
 
@@ -75,7 +75,7 @@ const Profile = () => {
     if (!geminiKey.trim()) return toast.error("Please enter a Gemini key first.");
     setTestingGemini(true);
     try {
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey.trim()}`, {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiKey.trim()}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ contents: [{ parts: [{ text: "ping" }] }] })
@@ -83,6 +83,7 @@ const Profile = () => {
       if (res.ok) toast.success("Gemini API Connected!");
       else toast.error("Invalid Key");
     } catch (err: any) {
+      console.error("Gemini Test Error:", err);
       toast.error("Gemini Connection Failed");
     } finally {
       setTestingGemini(false);
@@ -97,6 +98,7 @@ const Profile = () => {
       if (res.ok) toast.success("Weather API Connected!");
       else toast.error("Invalid Key");
     } catch (err: any) {
+      console.error("Weather Test Error:", err);
       toast.error("Weather Connection Failed");
     } finally {
       setTestingWeather(false);
