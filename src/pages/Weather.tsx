@@ -36,7 +36,7 @@ const Weather = () => {
   const getFirebaseWeatherKey = async () => {
     if (auth.currentUser) {
       try {
-        const snap = await getDoc(doc(db, "users", auth.currentUser.uid, "config"));
+        const snap = await getDoc(doc(db, "users", auth.currentUser.uid));
         if (snap.exists()) return snap.data().weatherKey;
       } catch (err) { console.error(err); }
     }

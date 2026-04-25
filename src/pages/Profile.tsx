@@ -23,14 +23,17 @@ const Profile = () => {
       setName(user.displayName || "");
 
       const fetchConfig = async () => {
+        console.log("Fetching config for user:", user.uid);
         try {
-          const docSnap = await getDoc(doc(db, "users", user.uid, "config"));
+          const docSnap = await getDoc(doc(db, "users", user.uid));
+          console.log("Config snapshot exists:", docSnap.exists());
           if (docSnap.exists()) {
             setGeminiKey(docSnap.data().geminiKey || "");
             setWeatherKey(docSnap.data().weatherKey || "");
           }
         } catch (err) {
           console.error("Error fetching config:", err);
+          toast.error("Error loading saved integrations");
         } finally {
           setIsLoading(false);
         }
@@ -57,11 +60,13 @@ const Profile = () => {
 
   const handleSaveApiKeys = async () => {
     if (!user?.uid) return toast.error("Must be logged in to save keys.");
+    console.log("Saving keys to doc: users/", user.uid);
     try {
-      await setDoc(doc(db, "users", user.uid, "config"), {
+      await setDoc(doc(db, "users", user.uid), {
         geminiKey: geminiKey.trim(),
         weatherKey: weatherKey.trim()
       }, { merge: true });
+      console.log("Keys saved successfully");
       toast.success("Configurations saved to cloud storage.", {
         description: "Your keys are now securely linked to your account."
       });
