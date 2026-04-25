@@ -26,6 +26,9 @@ import {
   SheetDescription,
 } from "@/components/ui/sheet";
 import { toast } from "sonner";
+import { auth, db } from "@/lib/firebase";
+import { collection, onSnapshot, query } from "firebase/firestore";
+import { useAuth } from "@/context/AuthContext";
 
 interface Report {
   id: string;
@@ -46,10 +49,17 @@ const Reports = () => {
   const [allReports, setAllReports] = useState<Report[]>([]);
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
 
+  const { user } = useAuth();
+
   useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem("agrisense_scans") || "[]");
-    setAllReports(saved);
-  }, []);
+    if (!user) return;
+    const q = query(collection(db, "users", user.uid, "scans"));
+    const unsubscribe = onSnapshot(q, (snap) => {
+      const data = snap.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Report[];
+      setAllReports(data.reverse());
+    });
+    return () => unsubscribe();
+  }, [user]);
 
   const filtered = allReports.filter((r) => {
     const matchesSearch = r.crop.toLowerCase().includes(search.toLowerCase()) ||

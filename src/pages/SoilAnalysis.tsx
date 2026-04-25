@@ -1,10 +1,12 @@
-import { useState, useRef } from "react";
-import { Upload, Droplets, FlaskConical, Layers, Sprout, ArrowRight, BarChart3, Loader2, Sparkles, Image as ImageIcon } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Upload, Droplets, FlaskConical, Layers, Sprout, ArrowRight, BarChart3, Loader2, Sparkles, Image as ImageIcon, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
+import { auth, db } from "@/lib/firebase";
+import { doc, getDoc, collection, addDoc } from "firebase/firestore";
 
 const getSoilDiagnosis = (inputs: any, type: string) => {
   const ph = parseFloat(inputs.ph);
@@ -64,6 +66,30 @@ const SoilAnalysis = () => {
     p: "50",
     k: "150"
   });
+  const [hasAPIKey, setHasAPIKey] = useState(true);
+
+  useEffect(() => {
+    const checkKey = async () => {
+      const dbKey = await getFirebaseGeminiKey();
+      const apiKey = dbKey || import.meta.env.VITE_GEMINI_API_KEY;
+      if (!apiKey || apiKey === "your_gemini_api_key_here") {
+        setHasAPIKey(false);
+      } else {
+        setHasAPIKey(true);
+      }
+    };
+    checkKey();
+  }, []);
+
+  const getFirebaseGeminiKey = async () => {
+    if (auth.currentUser) {
+      try {
+        const snap = await getDoc(doc(db, "users", auth.currentUser.uid, "config"));
+        if (snap.exists()) return snap.data().geminiKey;
+      } catch (err) { console.error(err); }
+    }
+    return null;
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputs({ ...inputs, [e.target.name]: e.target.value });
@@ -81,7 +107,8 @@ const SoilAnalysis = () => {
   const analyzeWithAI = async () => {
     if (!selectedImage) return toast.error("Please upload a soil photo first.");
 
-    const apiKey = sessionStorage.getItem("agrisense_gemini_key") || import.meta.env.VITE_GEMINI_API_KEY;
+    const dbKey = await getFirebaseGeminiKey();
+    const apiKey = dbKey || import.meta.env.VITE_GEMINI_API_KEY;
     if (!apiKey || apiKey === "your_gemini_api_key_here") {
       return toast.error("AI requires a Gemini API Key in Profile settings.");
     }
@@ -150,20 +177,29 @@ const SoilAnalysis = () => {
 
   const handleAnalyze = () => {
     setIsAnalyzing(true);
-    setTimeout(() => {
+    setTimeout(async () => {
       const diagnosis = getSoilDiagnosis(inputs, soilType);
 
-      // Persist to session history
+      // Persist to cloud history
       const sessionResult = {
         ...diagnosis,
         id: `SOIL-${Math.floor(Math.random() * 9000) + 1000}`,
+        crop: "Soil Scan", // Standardize with report architecture
+        disease: `${diagnosis.type} Soil Profile`,
         date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
         status: "Completed",
-        confidence: 98 // Manual analysis is always high confidence
+        confidence: 98,
+        severity: "none",
+        image: selectedImage || ""
       };
 
-      const existingScans = JSON.parse(sessionStorage.getItem("agrisense_scans") || "[]");
-      sessionStorage.setItem("agrisense_scans", JSON.stringify([sessionResult, ...existingScans]));
+      if (auth.currentUser) {
+        try {
+          await addDoc(collection(db, "users", auth.currentUser.uid, "scans"), sessionResult);
+        } catch (err) {
+          console.error("Failed to save scan to cloud", err);
+        }
+      }
 
       setCurrentResults(diagnosis);
       setIsAnalyzing(false);
@@ -173,6 +209,15 @@ const SoilAnalysis = () => {
 
   return (
     <div className="space-y-6">
+      {!hasAPIKey && (
+        <div className="bg-info/10 border border-info/20 p-4 rounded-2xl flex items-center gap-4 anim-enter">
+          <AlertTriangle className="w-5 h-5 text-info flex-shrink-0" />
+          <div>
+            <p className="text-sm font-bold text-info">Soil Lab Demo Mode</p>
+            <p className="text-xs text-info/80">Gemini API key not detected. AI-powered soil classification is disabled. Enter your key in Profile settings to enable automatic mineral estimation.</p>
+          </div>
+        </div>
+      )}
       <div className="anim-enter">
         <p className="text-muted-foreground text-sm max-w-lg font-body">
           Our Soil AI Lab evaluates 20+ parameters to determine your soil's health.

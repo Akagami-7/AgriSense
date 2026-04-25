@@ -2,15 +2,25 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Camera, FileText, Lightbulb, Leaf, Bug, TrendingUp, ScanLine, ArrowUpRight, Activity } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+import { auth, db } from "@/lib/firebase";
+import { collection, onSnapshot, query } from "firebase/firestore";
+import { useAuth } from "@/context/AuthContext";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [scans, setScans] = useState<any[]>([]);
 
+  const { user } = useAuth();
+
   useEffect(() => {
-    const saved = JSON.parse(sessionStorage.getItem("agrisense_scans") || "[]");
-    setScans(saved);
-  }, []);
+    if (!user) return;
+    const q = query(collection(db, "users", user.uid, "scans"));
+    const unsubscribe = onSnapshot(q, (snap) => {
+      const data = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setScans(data.reverse());
+    });
+    return () => unsubscribe();
+  }, [user]);
 
   const totalScans = scans.length;
   const healthyCount = scans.filter(s => s.status === "Healthy" || s.disease === "Healthy").length;
@@ -236,7 +246,7 @@ const Dashboard = () => {
                   <p className="text-sm font-medium text-foreground">{scan.crop}</p>
                   <p className="text-[11px] text-muted-foreground">{scan.time}</p>
                 </div>
-                <span className={scan.result === "Healthy" ? "chip-success" : "chip-danger"}>
+                <span className={scan.status === "Healthy" ? "chip-success" : "chip-danger"}>
                   {scan.result}
                 </span>
               </div>

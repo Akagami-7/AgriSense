@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import { Sun, Cloud, CloudRain, Droplets, Wind, Thermometer, CloudSun, Eye, Gauge, CloudDrizzle, Snowflake, AlertTriangle, Leaf, CheckCircle2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { auth, db } from "@/lib/firebase";
+import { doc, getDoc } from "firebase/firestore";
 
 const getIcon = (code: string) => {
   const map: any = {
@@ -26,14 +29,62 @@ const Weather = () => {
   const [hourly, setHourly] = useState<any[]>([]);
   const [alerts, setAlerts] = useState<any[]>([]);
   const [coords, setCoords] = useState<{ lat: number, lon: number }>({ lat: 12.8230, lon: 80.0440 });
+  const [searchCity, setSearchCity] = useState("");
+  const [searching, setSearching] = useState(false);
+  const [hasAPIKey, setHasAPIKey] = useState(true);
+
+  const getFirebaseWeatherKey = async () => {
+    if (auth.currentUser) {
+      try {
+        const snap = await getDoc(doc(db, "users", auth.currentUser.uid, "config"));
+        if (snap.exists()) return snap.data().weatherKey;
+      } catch (err) { console.error(err); }
+    }
+    return null;
+  };
+
+  const handleCitySearch = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!searchCity.trim()) return;
+
+    const dbKey = await getFirebaseWeatherKey();
+    const apiKey = dbKey || import.meta.env.VITE_OPENWEATHER_API_KEY;
+    if (!apiKey || apiKey === "your_openweathermap_api_key_here") {
+      setHasAPIKey(false);
+      return;
+    }
+
+    setSearching(true);
+    setError(false);
+    try {
+      const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(searchCity)}&appid=${apiKey}`);
+      if (!res.ok) throw new Error("City not found");
+      const data = await res.json();
+
+      const newCoords = { lat: data.coord.lat, lon: data.coord.lon };
+      setCoords(newCoords);
+      await fetchWeatherData(newCoords.lat, newCoords.lon);
+      setSearchCity("");
+    } catch (err: any) {
+      console.error(err);
+      setError(true);
+      setErrorMsg(err.message || "Could not find location for the entered city.");
+    } finally {
+      setSearching(false);
+    }
+  };
 
   const fetchWeatherData = async (lat = 12.8230, lon = 80.0440) => {
-    const apiKey = sessionStorage.getItem("agrisense_weather_key") || import.meta.env.VITE_OPENWEATHER_API_KEY;
+    const dbKey = await getFirebaseWeatherKey();
+    const apiKey = dbKey || import.meta.env.VITE_OPENWEATHER_API_KEY;
 
     if (!apiKey || apiKey === "your_openweathermap_api_key_here") {
+      setHasAPIKey(false);
       setLoading(false);
       return;
     }
+
+    setHasAPIKey(true);
 
     setLoading(true);
     setError(false);
@@ -189,7 +240,7 @@ const Weather = () => {
         </div>
       )}
 
-      {(!sessionStorage.getItem("agrisense_weather_key") && !import.meta.env.VITE_OPENWEATHER_API_KEY) && (
+      {!hasAPIKey && (
         <div className="bg-info/10 border border-info/20 p-4 rounded-2xl flex items-center gap-4 anim-enter">
           <AlertTriangle className="w-5 h-5 text-info flex-shrink-0" />
           <div>
@@ -198,10 +249,22 @@ const Weather = () => {
           </div>
         </div>
       )}
-      <div className="anim-enter">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 anim-enter pb-2">
         <p className="text-muted-foreground text-sm max-w-lg">
           Real-time weather data and farming-specific alerts for your location in {displayCurrent.locationName || "your area"}.
         </p>
+
+        <form onSubmit={handleCitySearch} className="flex items-center gap-2 max-w-sm w-full">
+          <Input
+            placeholder="Search by city (e.g. New York)"
+            value={searchCity}
+            onChange={(e) => setSearchCity(e.target.value)}
+            className="rounded-xl h-11 border-border/80 focus:ring-primary/20 bg-background/50 shadow-sm"
+          />
+          <Button type="submit" disabled={searching || !searchCity.trim()} className="h-11 rounded-xl px-5 gradient-earth text-primary-foreground font-semibold shadow-sm">
+            {searching ? <Loader2 className="w-4 h-4 animate-spin" /> : "Search City"}
+          </Button>
+        </form>
       </div>
 
       {/* Current weather hero */}

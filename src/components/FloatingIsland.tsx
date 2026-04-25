@@ -2,6 +2,7 @@ import { NavLink } from "react-router-dom";
 import { LayoutDashboard, Camera, Sprout, FileText, CloudSun, Lightbulb, User, Settings, LogOut, Search, Bell, Sun, Moon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
+import { toast } from "sonner";
 
 const navItems = [
     { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
@@ -73,9 +74,11 @@ export function FloatingIsland() {
                         {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
                     </button>
                     <div className="relative">
-                        <button className="p-2.5 rounded-xl text-earth-600 dark:text-earth-400 hover:bg-earth-100 dark:hover:bg-earth-800/50 transition-all">
+                        <button
+                            onClick={() => toast.info("No new notifications", { description: "Your farm is running smoothly! Alerts will appear here when needed." })}
+                            className="p-2.5 rounded-xl text-earth-600 dark:text-earth-400 hover:bg-earth-100 dark:hover:bg-earth-800/50 transition-all"
+                        >
                             <Bell className="w-5 h-5" />
-                            <span className="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-accent ring-2 ring-background shadow-sm" />
                         </button>
                     </div>
                     <NavLink to="/profile" className="ml-2 w-9 h-9 rounded-xl gradient-earth flex items-center justify-center shadow-md hover:scale-105 transition-all">

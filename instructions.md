@@ -1,91 +1,50 @@
-# Setup & Usage Instructions
+# AgriSense Setup & Installation Guide
 
-This document provides a clear, step-by-step guide to setting up and running the AgriSense Smart Farming Assistant on your local development environment.
+This document provides a clear, step-by-step guide to setting up and running the AgriSense Smart Farming Assistant on your own computer.
 
-## 📋 Step 0: Initial Environment Setup
+---
 
-If you are setting this up on a fresh computer, follow these steps to install the core engines:
+## 🚀 Step-by-Step Local Setup
 
-### 1. Install Node.js & npm (The Engine)
-AgriSense runs on Node.js. It comes bundled with `npm` (Node Package Manager).
-- **Download**: Go to [nodejs.org](https://nodejs.org/) and download the **LTS (Long Term Support)** version for Windows.
-- **Install**: Run the downloaded `.msi` file. Keep all default settings (click "Next" until finished).
-- **Verify**: Open your **Command Prompt (cmd)** or **PowerShell** and type:
-  ```bash
-  node -v
-  npm -v
-  ```
-  *If you see version numbers (e.g., v20.x.x), you are ready!*
+Follow these exact steps to run the AgriSense platform locally.
 
-### 2. Vite (The Development Engine)
-Vite is the professional build tool that makes AgriSense fast. **You do not need to install Vite separately.** 
-- It is included automatically when you run `npm install` in Step 2.
-- It will run in your browser automatically when you start the project.
+### Step 1: Install Node.js
+Before starting, you need to have Node.js installed on your computer.
+1. Download Node.js from the [official website](https://nodejs.org/).
+2. Run the installer and simply click "Next" through the default setup options. 
 
-## 🚀 Getting Started (Client Quick-Start)
+### Step 2: Extract the Project
+1. If you downloaded this project as a `.zip` file, right-click the file and select **Extract All**.
+2. Open the newly extracted `AgriSense` folder.
 
-Follow these steps once your environment is ready:
+### Step 3: Open the Terminal
+1. Open your computer's terminal or command prompt.
+   - **Windows:** Press `Win + R`, type `cmd`, and hit Enter.
+   - **Mac:** Open Spotlight (Cmd + Space) and search for `Terminal`.
+2. Navigate into your project folder. An easy way to do this is to type `cd ` (with a space) and then drag and drop the `AgriSense` folder right into the terminal window, then hit Enter.
 
-### Step 1: Open the Project
-Locate your `AgriSense` folder. Right-click inside the folder and select **"Open in Terminal"** or **"Open Command Window Here"**.
-
-### Step 2: Install Project Components
-Run this command to set up the internal libraries (Vite, React, etc.):
+### Step 4: Install Dependencies
+In your terminal, type the following command and hit Enter:
 ```bash
 npm install
 ```
-*Wait 1-2 minutes. A `node_modules` folder will be created. This only needs to be done once.*
+*(Wait a minute or two for this to finish downloading the required project files).*
 
-### Step 3: Launch the Application
-Run this command to start the development engine (Vite):
+### Step 5: Setup Your Environment (.env file)
+The project requires keys to connect to Firebase authentication.
+1. In the `AgriSense` folder, look for a file named `.env.example`.
+2. Rename this file to exactly `.env` (make sure it doesn't say `.env.txt`).
+3. Open the `.env` file in any text editor (like Notepad or VS Code) and you will see several placeholders.
+
+**Where to get your keys:**
+- **Firebase Keys:** Go to the [Firebase Console](https://console.firebase.google.com/), create a new Web project, and enable **Authentication** (Email/Password & Google OAuth). Go to Project Settings to find your API key, Auth Domain, Project ID, Storage Bucket, Messaging Sender ID, and App ID. Paste these into their respective `VITE_FIREBASE_` lines.
+
+*(Note: You will input your Google Gemini and OpenWeather API keys directly inside the platform's Profile page once the app is running!)*
+
+### Step 6: Start the Application!
+In your terminal, type the following command and hit Enter:
 ```bash
 npm run dev
 ```
-
-### Step 4: Access the Dashboard
-Once the server is "ready", look for the local URL in your terminal:
-- **Default**: [http://localhost:8080/](http://localhost:8080/)
-- Open your web browser and paste the URL.
-- The AgriSense Login page will appear.
-
-## 🔑 API Configuration (Real AI & Weather)
-
-To enable real AI crop diagnosis and real-time weather data, you need to add your personal API keys. These keys are kept private on your local machine and are not shared on GitHub.
-
-### Method 1: In-App Configuration (Recommended)
-1. **Launch the App** and sign in.
-2. Navigate to the **Profile** page in the sidebar.
-3. Scroll down to the **API Cloud Configuration** section.
-4. Paste your **Gemini** and **OpenWeather** keys into the respective fields.
-5. Click **Apply & Save Configurations**. The app will refresh and start using your real data immediately!
-
-### Method 2: Environment Variables (Advanced)
-1. **Create Environment File**: In the project root, create a new file named `.env` (or copy `.env.example` and rename it to `.env`).
-2. **Get Google Gemini Key**: 
-   - Visit [Google AI Studio](https://aistudio.google.com/).
-   - Click "Get API Key" and copy it.
-   - In your `.env` file, paste it: `VITE_GEMINI_API_KEY=your_key_here`
-3. **Get OpenWeatherMap Key**:
-   - Visit [OpenWeatherMap](https://openweathermap.org/api).
-   - Sign up for a free "Current Weather" API key.
-   - In your `.env` file, paste it: `VITE_OPENWEATHER_API_KEY=your_key_here`
-
-*Note: The application will continue to work in "Simulation Mode" if no keys are provided.*
-
-## ✨ Using the Platform
-
-### Authentication
-Use any email and password to log in. The system is currently configured for demonstration purposes.
-
-### Features
-- **Dashboard**: Get a high-level overview of your farm's health and statistics.
-- **Crop Detection**: Navigate here to identify crop diseases by uploading an image.
-- **Soil Analysis**: Input your field's soil metrics to receive tailored crop advice.
-- **Weather Insights**: Monitor agricultural weather risks and 7-day forecasts.
-- **AI Assistant**: Click the green sprout icon in the bottom-right corner to talk to the AgriSense AI.
-
-## 🌙 Dark Mode
-You can toggle between Dark and Light modes using the moon/sun icon in the top header. This is especially useful for early morning or late evening farm management.
-
----
-*For any technical issues or further customization, please refer to the project's source code documentation.*
+You will quickly see a local link appear in the terminal, looking something like `http://localhost:5173/` or `http://localhost:8080/`. 
+Hold down `Ctrl` (or `Cmd` on Mac) and click that link to open the fully working app in your browser!

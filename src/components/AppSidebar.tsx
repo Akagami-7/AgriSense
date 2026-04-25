@@ -1,6 +1,7 @@
 import { LayoutDashboard, Camera, Sprout, FileText, CloudSun, Lightbulb, User, LogOut } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 import {
   Sidebar,
   SidebarContent,
@@ -29,6 +30,13 @@ const secondaryNav = [
 export function AppSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = () => {
+    logout();
+    navigate("/");
+  };
 
   return (
     <Sidebar collapsible="icon" className="border-r-0">
@@ -101,14 +109,13 @@ export function AppSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
-              <NavLink
-                to="/"
-                className="text-sidebar-foreground/50 hover:text-sidebar-foreground hover:bg-destructive/10 rounded-xl transition-all py-2.5"
-                activeClassName=""
+              <button
+                onClick={handleSignOut}
+                className="flex items-center w-full text-sidebar-foreground/50 hover:text-sidebar-foreground hover:bg-destructive/10 rounded-xl transition-all py-2.5 px-2"
               >
                 <LogOut className="mr-3 h-[18px] w-[18px]" />
                 {!collapsed && <span className="text-[13px]">Sign Out</span>}
-              </NavLink>
+              </button>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

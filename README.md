@@ -7,12 +7,12 @@ AgriSense is a professional-grade agricultural platform designed to empower mode
 
 ## Key Features
 
-- **AI Crop Detection**: Real-time identification of crop types and health status from imagery.
+- **AI Crop Detection**: Real-time identification of crop types and health status from imagery using Gemini AI.
 - **Smart Soil Analysis**: Detailed diagnostic reports on soil composition and health metrics.
 - **Precision Weather Monitoring**: Localized weather forecasts with agricultural-specific data.
 - **Synchronized Field Dashboard**: Visualizes scan history and trends with enterprise-level granularity.
+- **Secure Authentication**: Built-in email/password and Google login powered by Firebase.
 - **Expert Farming Tips**: Curated agricultural advice based on seasonal and regional data.
-- **Comprehensive Reports**: Exportable data summaries for long-term farm management.
 
 ## Tech Stack
 
@@ -22,9 +22,9 @@ AgriSense is a professional-grade agricultural platform designed to empower mode
 - **UI Components**: Radix UI (Shadcn UI pattern)
 - **Data Fetching**: TanStack Query (React Query)
 - **Charts**: Recharts
+- **Authentication**: Firebase Authentication
 - **Icons**: Lucide React
 - **Validation**: Zod & React Hook Form
-- **Testing**: Vitest & Playwright
 
 ## Project Structure
 
@@ -85,4 +85,4 @@ AgriSense/
 - **`SoilAnalysis.tsx`**: Features a robust form system for inputting soil data and receiving diagnostic scores.
 
 ---
-*Developed as a high-fidelity capstone project for the Smart Farming initiative.*
+*Developed as a high-fidelity platform for the Smart Farming initiative.*
