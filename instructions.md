@@ -4,7 +4,7 @@ This document provides a clear, step-by-step guide to setting up and running the
 
 ---
 
-## 🚀 Step-by-Step Local Setup
+## Step-by-Step Local Setup
 
 Follow these exact steps to run the AgriSense platform locally.
 
@@ -37,7 +37,7 @@ The project requires several configuration keys to connect to Firebase authentic
 2. Rename this file to exactly `.env` (make sure it doesn't say `.env.txt`).
 3. Open the `.env` file in any text editor (like Notepad or VS Code).
 
-#### 🛠️ Firebase Console Setup Guide
+#### Firebase Console Setup Guide
 Follow these steps to get your Firebase keys:
 
 1. **Create a Project:**
